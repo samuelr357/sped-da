@@ -1,4 +1,4 @@
-# sped-da
+# sped-da-emissor
 
 Classes para geração dos documentos auxiliares usados pelos padrões Sped
 
