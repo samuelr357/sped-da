@@ -1122,7 +1122,7 @@ class Danfe extends DaCommon
         $this->pdf->textBox($x, $y, $w, $h);
 
         $texto = "DANFE";
-        $aFont = ['font' => $this->fontePadrao, 'size' => 14, 'style' => 'B'];
+        $aFont = ['font' => $this->fontePadrao, 'size' => 12, 'style' => ''];
         $this->pdf->textBox($x, $y + 1, $w, $h, $texto, $aFont, 'T', 'C', 0, '');
         $aFont = ['font' => $this->fontePadrao, 'size' => 8, 'style' => ''];
         $texto = 'Documento Auxiliar da Nota Fiscal Eletrônica';
@@ -1144,7 +1144,7 @@ class Danfe extends DaCommon
         $texto = $this->ide->getElementsByTagName('tpNF')->item(0)->nodeValue;
         $this->pdf->textBox($x + 27, $y1, 5, $h, $texto, $aFont, 'C', 'C', 1, '');
         //numero da NF
-        $aFont = ['font' => $this->fontePadrao, 'size' => 10, 'style' => 'B'];
+        $aFont = ['font' => $this->fontePadrao, 'size' => 9, 'style' => ''];
         $y1    = $y + 20;
         $numNF = str_pad(
             $this->ide->getElementsByTagName('nNF')->item(0)->nodeValue,
@@ -1192,7 +1192,7 @@ class Danfe extends DaCommon
         $h     = 7;
         $texto = 'CHAVE DE ACESSO';
         $this->pdf->textBox($x, $y1, $w, $h, $texto, $aFont, 'T', 'L', 0, '');
-        $aFont = ['font' => $this->fontePadrao, 'size' => 8, 'style' => 'B'];
+        $aFont = ['font' => $this->fontePadrao, 'size' => 8, 'style' => ''];
         $y1    = $y + 8 + $bH;
         $texto = $this->formatField($chave_acesso, $this->formatoChave);
         $this->pdf->textBox($x + 2, $y1, $w - 2, $h, $texto, $aFont, 'T', 'C', 0, '');
@@ -1239,10 +1239,12 @@ class Danfe extends DaCommon
         $oldY  += $h;
         $x     = $oldX;
         $h     = 7;
+        $h1    = $h - 1;
+        $x1    = $x - 14;
         $this->pdf->textBox($x, $y, $w, $h, $texto, $aFont, 'T', 'L', 1, '');
         $texto = $this->ide->getElementsByTagName("natOp")->item(0)->nodeValue;
-        $aFont = ['font' => $this->fontePadrao, 'size' => 10, 'style' => 'B'];
-        $this->pdf->textBox($x, $y, $w, $h, $texto, $aFont, 'B', 'C', 0, '');
+        $aFont = ['font' => $this->fontePadrao, 'size' => 7, 'style' => ''];
+        $this->pdf->textBox($x1, $y, $w, $h1, $texto, $aFont, 'B', 'C', 0, '');
         $x += $w;
         $w = $w3;
         //PROTOCOLO DE AUTORIZAÇÃO DE USO ou DADOS da NF-E
@@ -1254,7 +1256,7 @@ class Danfe extends DaCommon
         // Além disso, existem várias NFes em contingência que eu recebo com protocolo de autorização.
         // Na minha opinião, deveríamos mostra-lo, mas o  manual  da NFe v4.01 diz outra coisa...
         if (($this->tpEmis == 2 || $this->tpEmis == 5) && empty($this->epec)) {
-            $aFont = ['font' => $this->fontePadrao, 'size' => 8, 'style' => 'B'];
+            $aFont = ['font' => $this->fontePadrao, 'size' => 8, 'style' => ''];
             $texto = $this->formatField(
                 $chaveContingencia,
                 "#### #### #### #### #### #### #### #### ####"
@@ -3912,11 +3914,11 @@ class Danfe extends DaCommon
             $x1    = $x + $w;
             $w1    = $this->wPrint - $w;
             $texto = "NF-e";
-            $aFont = ['font' => $this->fontePadrao, 'size' => 14, 'style' => 'B'];
+            $aFont = ['font' => $this->fontePadrao, 'size' => 12, 'style' => ''];
             $this->pdf->textBox($x1, $y, $w1, 18, $texto, $aFont, 'T', 'C', 0, '');
             $texto = "Nº. " . $this->formatField($numNF, "###.###.###") . " \n";
             $texto .= "Série $serie";
-            $aFont = ['font' => $this->fontePadrao, 'size' => 10, 'style' => 'B'];
+            $aFont = ['font' => $this->fontePadrao, 'size' => 10, 'style' => ''];
             $this->pdf->textBox($x1, $y, $w1, 18, $texto, $aFont, 'C', 'C', 1, '');
             //DATA DE RECEBIMENTO
             $texto = "DATA DE RECEBIMENTO";
