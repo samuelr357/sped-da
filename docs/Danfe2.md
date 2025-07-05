@@ -131,13 +131,13 @@ São métodos que incluem informações ao DANFE.
 ```php
     
     /**
-     * Exibe ou não, os dados do integrador e a mensagem "Powered by NFePHP®"
+     * Exibe ou não, os dados do integrador e a mensagem "Powered by MicroSistemas®"
      * @param string $message
      * @param bool $powered
      * @return void
      */
-    $message = 'WEBNFe Sistemas - http://www.webnfe.com.br'; //dados do integrador no rodapé da pagina 
-    $powered = false; //exibe ou não o texto "Powered by NFePHP®" no rodapé da página
+    $message = 'Micro Sistemas - http://www.microsistemas.com.br'; //dados do integrador no rodapé da pagina 
+    $powered = false; //exibe ou não o texto "Powered by MicroSistemas" no rodapé da página
     $danfe->creditsIntegratorFooter($message, $powered);
 
     /**
