@@ -902,9 +902,9 @@ class Pdf extends Fpdf
         }
         //desenhar a borda da caixa
         if ($border && $fill) {
-            $this->roundedRect($x, $y, $w, $h, 0.8, '1234', 'DF');
+            $this->roundedRect($x, $y, $w, $h, 0.6, '1234', 'DF');
         } elseif ($border) {
-            $this->roundedRect($x, $y, $w, $h, 0.8, '1234', 'D');
+            $this->roundedRect($x, $y, $w, $h, 0.6, '1234', 'D');
         } elseif ($fill) {
             $this->rect($x, $y, $w, $h, 'F');
         }
