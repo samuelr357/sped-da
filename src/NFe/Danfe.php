@@ -323,6 +323,8 @@ class Danfe extends DaCommon
 
     protected bool $usarLinhaTracejadaSeparacaoItens = true;
 
+    protected bool $exibirRodape = true;
+
     public function setTitle($title)
     {
         $this->title = $title;
@@ -2054,7 +2056,7 @@ class Danfe extends DaCommon
                 if ($nDup != '0' && $nDup != '') {
                     $aFont = ['font' => $this->fontePadrao, 'size' => 6, 'style' => ''];
                     $this->pdf->textBox($x, $y, $w, $h, 'Num.', $aFont, 'T', 'L', 1, '');
-                    $aFont = ['font' => $this->fontePadrao, 'size' => 7, 'style' => 'B'];
+                    $aFont = ['font' => $this->fontePadrao, 'size' => 7, 'style' => ''];
                     $this->pdf->textBox($x, $y, $w, $h, $nDup, $aFont, 'T', 'R', 0, '');
                 } else {
                     $aFont = ['font' => $this->fontePadrao, 'size' => 6, 'style' => ''];
@@ -2062,11 +2064,11 @@ class Danfe extends DaCommon
                 }
                 $aFont = ['font' => $this->fontePadrao, 'size' => 6, 'style' => ''];
                 $this->pdf->textBox($x, $y, $w, $h, 'Venc.', $aFont, 'C', 'L', 0, '');
-                $aFont = ['font' => $this->fontePadrao, 'size' => 7, 'style' => 'B'];
+                $aFont = ['font' => $this->fontePadrao, 'size' => 7, 'style' => ''];
                 $this->pdf->textBox($x, $y, $w, $h, $dDup, $aFont, 'C', 'R', 0, '');
                 $aFont = ['font' => $this->fontePadrao, 'size' => 6, 'style' => ''];
                 $this->pdf->textBox($x, $y, $w, $h, 'Valor', $aFont, 'B', 'L', 0, '');
-                $aFont = ['font' => $this->fontePadrao, 'size' => 7, 'style' => 'B'];
+                $aFont = ['font' => $this->fontePadrao, 'size' => 7, 'style' => ''];
                 $this->pdf->textBox($x, $y, $w, $h, $vDup, $aFont, 'B', 'R', 0, '');
                 $x       += $w + $increm;
                 $dupcont += 1;
@@ -3814,9 +3816,11 @@ class Danfe extends DaCommon
             $x = $this->wCanhoto;
         }
         $aFont = ['font' => $this->fontePadrao, 'size' => 6, 'style' => 'I'];
-        $texto = "Impresso em " . date('d/m/Y') . " as " . date('H:i:s')
-            . '  ' . $this->creditos;
-        $this->pdf->textBox($x, $y, $w, 0, $texto, $aFont, 'T', 'L', false);
+        if ($this->exibirRodape){
+            $texto = "Impresso em " . date('d/m/Y') . " as " . date('H:i:s')
+                . '  ' . $this->creditos;
+            $this->pdf->textBox($x, $y, $w, 0, $texto, $aFont, 'T', 'L', false);
+        } 
         $texto = $this->powered ? "Powered by MicroSistemas®" : '';
         $this->pdf->textBox($x, $y, $w, 0, $texto, $aFont, 'T', 'R', false, '');
     }
@@ -4206,5 +4210,10 @@ class Danfe extends DaCommon
         }
 
         $this->pdf->line($x, $y, $x, $yfinal);
+    }
+
+    public function setExibirRodape(bool $exibirRotape): void
+    {
+        $this->exibirRodape = $exibirRotape;
     }
 }
