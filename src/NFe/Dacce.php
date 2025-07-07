@@ -117,15 +117,15 @@ class Dacce extends DaCommon
             $this->orientacao = 'P';
         }
         // margens do PDF
-        $margSup = $this->margsup ?? 2;
-        $margEsq = $this->margesq ?? 2;
-        $margDir = $this->margesq ?? 2;
+        $margSup = $this->margsup ?? 4;
+        $margEsq = $this->margesq ?? 4;
+        $margDir = $this->margesq ?? 4;
         $this->pdf = new Pdf($this->orientacao, 'mm', $this->papel ?? 'A4');
         if ($this->orientacao == 'P') {
-            $xInic = 1;
-            $yInic = 1;
-            $maxW = 210;
-            $maxH = 297;
+            $xInic = 5;
+            $yInic = 5;
+            $maxW = 207;
+            $maxH = 292;
         } else {
             $xInic = 5;
             $yInic = 5;
@@ -148,7 +148,7 @@ class Dacce extends DaCommon
         $y = $yInic;
         $y = $this->header($x, $y, $pag);
         $y = $this->body($x, $y + 15);
-        $y = $this->footer($x, $y + $this->hPrint - 20);
+        $y = $this->footer($x, $y + $this->hPrint - 5);
         return $this->id;
     }
 
@@ -231,7 +231,7 @@ class Dacce extends DaCommon
         $this->pdf->textBox($x, $y + 2, $w2, 8, $texto, $aFont, 'T', 'C', 0, '');
         $aFont = array('font' => $this->fontePadrao, 'size' => 12, 'style' => 'I');
         $texto = '(Carta de Correção Eletrônica)';
-        $this->pdf->textBox($x, $y + 7, $w2, 8, $texto, $aFont, 'T', 'C', 0, '');
+        $this->pdf->textBox($x, $y + 8, $w2, 9, $texto, $aFont, 'T', 'C', 0, '');
         $texto = 'ID do Evento: ' . $this->id;
         $aFont = array('font' => $this->fontePadrao, 'size' => 10, 'style' => '');
         $this->pdf->textBox($x, $y + 15, $w2, 8, $texto, $aFont, 'T', 'L', 0, '');
@@ -294,7 +294,7 @@ class Dacce extends DaCommon
 
         $yObs = $y1 + 10;
 
-        $x = 1;
+        $x = 5;
         $textoObs = 'A Carta de Correcao e disciplinada pelo paragrafo 1o-A do art. 7o do Convenio S/N, de 15 de dezembro de 1970 e pode ser utilizada para regularizacao de erro ocorrido na '
             . 'emissao de documento fiscal, desde que o erro nao esteja relacionado com: I - as variaveis que determinam o valor do imposto tais como: base de calculo, aliquota, diferenca de '
             . 'preco, quantidade, valor da operacao ou da prestacao; II - a correcao de dados cadastrais que implique mudanca do remetente ou do destinatario; III - a data de emissao ou de '
@@ -322,7 +322,7 @@ class Dacce extends DaCommon
             $valor = $this->infCorrecao->item($i)->nodeValue;
             $lines = $this->pdf->getNumLines($valor, ($this->wPrint - 35), $aFont) ?? '';
             $aFont = array('font' => $this->fontePadrao, 'size' => 9, 'style' => 'B');
-            $this->pdf->textBox($x, $y, 30, 5, "Correção", $aFont, 'T', 'L', 0, '', false);
+            $this->pdf->textBox($x + 4, $y, 30, 5, "Correção", $aFont, 'T', 'L', 0, '', false);
             $aFont = array('font' => $this->fontePadrao, 'size' => 9, 'style' => '');
             $this->pdf->textBox($x + 30, $y, ($this->wPrint - 35), 5, $valor, $aFont, 'T', 'L', 0, '', false);
             $y += (3 * $lines) + 3;
@@ -345,11 +345,11 @@ class Dacce extends DaCommon
             $aFont = array('font' => $this->fontePadrao, 'size' => 6, 'style' => 'I');
             $texto = "Impresso em " . date('d/m/Y') . " as " . date('H:i:s')
                 . '  ' . $this->creditos;
-            $this->pdf->textBox($x, $y, $w, 4, $texto, $aFont, 'T', 'L', 0, '');
+            $this->pdf->textBox($x, $y + 10, $w, 4, $texto, $aFont, 'T', 'L', 0, '');
         }
         $texto = $this->powered ? "Powered by MicroSistemas®" : '';
         $aFont = array('font' => $this->fontePadrao, 'size' => 6, 'style' => 'I');
-        $this->pdf->textBox($x, $y, $w, 4, $texto, $aFont, 'T', 'R', 0, 'http://www.nfephp.org');
+        $this->pdf->textBox($x, $y + 10, $w, 4, $texto, $aFont, 'T', 'R', 0, 'http://www.nfephp.org');
     }
 
     public function setExibirRodape(bool $exibirRotape): void
