@@ -358,7 +358,7 @@ class Dacce extends DaCommon
         $this->exibirRodape = $exibirRotape;
     }
 
-    public function setEmail(bool $email): void
+    public function setEmail(string $email): void
     {
         $this->email = $email;
     }
