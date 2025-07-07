@@ -92,6 +92,8 @@ class Damdfe extends DaCommon
      */
     protected bool $exibirDocumentosVinculados = true;
 
+    protected bool $exibitRodape = true;
+
     /**
      * __construct
      *
@@ -1415,13 +1417,15 @@ class Damdfe extends DaCommon
         $this->pdf->textBox($x, $y, $x2, 8, $texto, $aFont, 'T', 'L', 0, '', false);
         //$y = $this->hPrint - 4;
         $y = $this->hPrint + 8;
-        $texto = "Impresso em  " . date('d/m/Y H:i:s') . ' ' . $this->creditos;
         $w = $this->wPrint - 15;
         $aFont = array('font' => $this->fontePadrao, 'size' => 6, 'style' => 'I');
-        $this->pdf->textBox($x, $y, $w, 4, $texto, $aFont, 'T', 'L', 0, '');
+        if ($this->exibitRodape) {
+            $texto = "Impresso em  " . date('d/m/Y H:i:s') . ' ' . $this->creditos;
+            $this->pdf->textBox($x, $y, $w, 4, $texto, $aFont, 'T', 'L', 0, '');
+        }
         $texto = '';
         if ($this->powered) {
-            $texto = "Powered by NFePHP®";
+            $texto = "Powered by MicroSystemas®";
         }
         $this->pdf->textBox($x, $y, $w, 8, $texto, $aFont, 'T', 'R', false, '');
     }
@@ -1429,5 +1433,10 @@ class Damdfe extends DaCommon
     public function setExibirDocumentosVinculados(bool $exibirDocumentosVinculados): void
     {
         $this->exibirDocumentosVinculados = $exibirDocumentosVinculados;
+    }
+
+        public function setExibirRodape(bool $exibirRodape): void
+    {
+        $this->exibitRodape = $exibirRodape;
     }
 }
