@@ -47,6 +47,7 @@ class Dacce extends DaCommon
     protected $formatoChave = "#### #### #### #### #### #### #### #### #### #### ####";
     protected $creditos;
     protected bool $exibirRodape = true;
+    protected $email = '';
 
     /**
      * __construct
@@ -196,7 +197,7 @@ class Dacce extends DaCommon
         $mun = $this->getTagValue($this->enderEmit, "xMun");
         $UF = $this->getTagValue($this->enderEmit, "UF");
         $fone = $this->getTagValue($this->enderEmit, "fone");
-        $email = 'adsadasdsadas';
+        $email = $this->email ?? '';
         $foneLen = strlen($fone);
         if ($foneLen > 0) {
             $fone2 = substr($fone, 0, $foneLen - 4);
@@ -355,5 +356,10 @@ class Dacce extends DaCommon
     public function setExibirRodape(bool $exibirRotape): void
     {
         $this->exibirRodape = $exibirRotape;
+    }
+
+    public function setEmail(bool $email): void
+    {
+        $this->email = $email;
     }
 }
