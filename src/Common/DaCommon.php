@@ -81,6 +81,10 @@ class DaCommon extends Common
      * @var bool
      */
     protected $powered = true;
+     /**
+     * @var string
+     */
+    protected $poweredTexto;
     /**
      * @var string
      */
