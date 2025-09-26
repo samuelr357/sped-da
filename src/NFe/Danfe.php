@@ -2551,7 +2551,7 @@ class Danfe extends DaCommon
                 ? $this->transporta->getElementsByTagName("UF")->item(0)->nodeValue
                 : '';
         } else {
-            $texto = 'Baependi';
+            $texto = '';
         }
         $aFont = ['font' => $this->fontePadrao, 'size' => 8, 'style' => ''];
         $this->pdf->textBox($x, $y - 1, $w3, $h, $texto, $aFont, 'B', 'C', 0, '');
