@@ -3149,8 +3149,8 @@ class Danfe extends DaCommon
         //VALOR IPI
         $x     += $w12;
         $w13   = round($w * 0.05, 0);
-        $texto = 'VALOR IPI';
-        $aFont = ['font' => $this->fontePadrao, 'size' => 6, 'style' => ''];
+        $texto = 'V.IPI';
+        $aFont = ['font' => $this->fontePadrao, 'size' => 5, 'style' => ''];
         $this->pdf->textBox($x, $y, $w13, $h, $texto, $aFont, 'C', 'C', 0, '', false);
 
         //$this->pdf->line($x + $w13, $y, $x + $w13, $y + $hmax);
@@ -3171,7 +3171,7 @@ class Danfe extends DaCommon
         //ALÍQ. IPI
         $x     += $w14;
         $w15   = $w - ($w1 + $w2 + $w3 + $w4 + $w5 + $w6 + $w7 + $w8 + $w9 + $w10 + $w11 + $w12 + $w13 + $w14);
-        $texto = 'ALÍQ. IPI';
+        $texto = 'A.IPI';
         $this->pdf->textBox($x, $y, $w15, $h, $texto, $aFont, 'C', 'C', 0, '', false);
         $this->pdf->line($oldX, $y + $h + 1, $oldX + $w, $y + $h + 1);
         $y += 5;
