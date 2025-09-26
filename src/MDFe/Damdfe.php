@@ -1425,7 +1425,7 @@ class Damdfe extends DaCommon
         }
         $texto = '';
         if ($this->powered) {
-            $texto = $this->poweredTexto ?? "Powered by MicroSystemas®";
+            $texto = $this->poweredTexto ?? "Powered by MicroSystemas";
         }
         $this->pdf->textBox($x, $y, $w, 8, $texto, $aFont, 'T', 'R', false, '');
     }

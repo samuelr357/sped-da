@@ -3821,7 +3821,7 @@ class Danfe extends DaCommon
                 . '  ' . $this->creditos;
             $this->pdf->textBox($x, $y, $w, 0, $texto, $aFont, 'T', 'L', false);
         } 
-        $texto = $this->powered ? "Powered by EmitePro®" : '';
+        $texto = $this->powered ? "Powered by EmitePro" : '';
         $this->pdf->textBox($x, $y, $w, 0, $texto, $aFont, 'T', 'R', false, '');
     }
 

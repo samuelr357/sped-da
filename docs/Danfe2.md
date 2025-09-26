@@ -131,7 +131,7 @@ São métodos que incluem informações ao DANFE.
 ```php
     
     /**
-     * Exibe ou não, os dados do integrador e a mensagem "Powered by EmitePro®"
+     * Exibe ou não, os dados do integrador e a mensagem "Powered by EmitePro"
      * @param string $message
      * @param bool $powered
      * @return void
