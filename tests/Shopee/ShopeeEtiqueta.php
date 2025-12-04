@@ -5,18 +5,16 @@ require __DIR__ . '/../../src/Shopee/EtiquetaShopeeProcessor.php';
 
 $files = [
     [
-        "etiquetas" => __DIR__ . "/etiquetas.pdf",
-        "rodape"    => __DIR__ . "/rodape.pdf"
-    ],
-    [
-        "etiquetas" => __DIR__ . "/etiquetas.pdf",
-        "rodape"    => __DIR__ . "/rodape.pdf"
+        "etiquetas" => base64_encode(file_get_contents(__DIR__ . "/etiquetas.pdf")),
+        "danfes" => [
+            'xml'
+        ]
     ]
 ];
 
 try {
     $processor = new EtiquetaShopeeProcessor();
-    $processor->renderMultiple($files, __DIR__ . "/saida_final.pdf");
+    $processor->renderMultiple($files);
 
     echo ">>> PDF final gerado com sucesso!\n";
 } catch (\Exception $e) {

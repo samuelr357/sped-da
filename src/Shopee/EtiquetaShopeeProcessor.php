@@ -2,7 +2,9 @@
 
 require __DIR__ . '/../../vendor/autoload.php';
 
+use NFePHP\DA\NFe\DanfeEtiqueta;
 use setasign\Fpdi\Fpdi;
+use setasign\Fpdi\PdfParser\StreamReader;
 
 /**
  * Classe para permitir rotação (extensão do FPDI/FPDF)
@@ -13,8 +15,10 @@ class PDF_Rotate extends Fpdi
 
     public function Rotate($angle, $x = -1, $y = -1)
     {
-        if ($x == -1) $x = $this->x;
-        if ($y == -1) $y = $this->y;
+        if ($x == -1)
+            $x = $this->x;
+        if ($y == -1)
+            $y = $this->y;
 
         if ($this->angle != 0) {
             $this->_out('Q');
@@ -24,14 +28,21 @@ class PDF_Rotate extends Fpdi
 
         if ($angle != 0) {
             $angle *= M_PI / 180;
-            $c  = cos($angle);
-            $s  = sin($angle);
+            $c = cos($angle);
+            $s = sin($angle);
             $cx = $x * $this->k;
             $cy = ($this->h - $y) * $this->k;
 
             $this->_out(sprintf(
                 'q %.5F %.5F %.5F %.5F %.5F %.5F cm 1 0 0 1 %.5F %.5F cm',
-                $c, $s, -$s, $c, $cx, $cy, -$cx, -$cy
+                $c,
+                $s,
+                -$s,
+                $c,
+                $cx,
+                $cy,
+                -$cx,
+                -$cy
             ));
         }
     }
@@ -64,48 +75,50 @@ class EtiquetaShopeeProcessor
      * @param array $files
      * @param string $outputFile
      */
-    public function renderMultiple(array $files, string $outputFile)
+    public function renderMultiple(array $files, string $outputFile = '')
     {
         $pdfFinal = new PDF_Rotate();
 
         foreach ($files as $item) {
             $arquivoEtiquetas = $item['etiquetas'];
-            $arquivoRodape    = $item['rodape'];
+            $danfesData = $item['danfes'];
 
-            if (!file_exists($arquivoEtiquetas)) {
-                throw new \Exception("Arquivo de etiquetas não encontrado: {$arquivoEtiquetas}");
+            if (preg_match('/^[A-Za-z0-9+\/=]+$/', $arquivoEtiquetas) === 1) {
+                $pdfEtiquetaString = base64_decode($arquivoEtiquetas);
+            } else {
+                throw new \Exception("Etiqueta enviada não é base64 válido.");
             }
-            if (!file_exists($arquivoRodape)) {
-                throw new \Exception("Arquivo de rodapé não encontrado: {$arquivoRodape}");
-            }
+
+            // Verifica se danfesData é um array ou string
+            $danfesArray = is_array($danfesData) ? $danfesData : [$danfesData];
 
             // ============================
             // 1ª ETAPA: Cortar A4 → A6
             // ============================
-            $tempCut = $this->tempDir . '/temp_cut_' . uniqid() . '.pdf';
+            $tempCut = $this->tempDir . '\temp_cut_' . uniqid() . '.pdf';
             $pdfCut = new Fpdi();
-            $pageCount = $pdfCut->setSourceFile($arquivoEtiquetas);
+            $pageCount = $pdfCut->setSourceFile(StreamReader::createByString($pdfEtiquetaString));
 
             for ($page = 1; $page <= $pageCount; $page++) {
                 $tpl = $pdfCut->importPage($page);
                 $size = $pdfCut->getTemplateSize($tpl);
 
-                $fullWidth  = $size['width'];
+                $fullWidth = $size['width'];
                 $fullHeight = $size['height'];
-                $halfWidth  = $fullWidth / 2;
+                $halfWidth = $fullWidth / 2;
                 $halfHeight = $fullHeight / 2;
 
                 // Quadrante 1 (superior esquerdo)
                 $pdfCut->AddPage('P', [$halfWidth, $halfHeight]);
                 $pdfCut->useTemplate($tpl, 0, 0, $fullWidth, $fullHeight);
 
-                // Quadrante 2 (superior direito)
-                $pdfCut->AddPage('P', [$halfWidth, $halfHeight]);
-                $pdfCut->useTemplate($tpl, -$halfWidth, 0, $fullWidth, $fullHeight);
-
-                // Quadrante 3 (inferior esquerdo)
+                // Quadrante 2 (inferior esquerdo)
                 $pdfCut->AddPage('P', [$halfWidth, $halfHeight]);
                 $pdfCut->useTemplate($tpl, 0, -$halfHeight, $fullWidth, $fullHeight);
+
+                // Quadrante 3 (superior direito)
+                $pdfCut->AddPage('P', [$halfWidth, $halfHeight]);
+                $pdfCut->useTemplate($tpl, -$halfWidth, 0, $fullWidth, $fullHeight);
 
                 // Quadrante 4 (inferior direito)
                 $pdfCut->AddPage('P', [$halfWidth, $halfHeight]);
@@ -120,18 +133,30 @@ class EtiquetaShopeeProcessor
             $pageCount2 = (new Fpdi())->setSourceFile($tempCut);
 
             for ($page = 1; $page <= $pageCount2; $page++) {
+                // Obtém o DANFE XML para esta página
+                $danfeIndex = $page - 1;
+                if (!isset($danfesArray[$danfeIndex])) {
+                    break;
+                }
+
                 $pdfCutTemp = new Fpdi();
                 $pdfCutTemp->setSourceFile($tempCut);
-                $tplEtiqueta  = $pdfCutTemp->importPage($page);
+                $tplEtiqueta = $pdfCutTemp->importPage($page);
                 $sizeEtiqueta = $pdfCutTemp->getTemplateSize($tplEtiqueta);
 
                 $w = $sizeEtiqueta['width'];
                 $h = $sizeEtiqueta['height'];
 
+                $pdfDanfe = new DanfeEtiqueta($danfesArray[$danfeIndex]);
+                $pdfContent = $pdfDanfe->render();
+
+                $tempDanfe = $this->tempDir . '/temp_danfe_' . uniqid() . '.pdf';
+                file_put_contents($tempDanfe, $pdfContent);
+
                 $pdfFinal->setSourceFile($tempCut);
                 $tplEtiquetaFinal = $pdfFinal->importPage($page);
 
-                $pdfFinal->setSourceFile($arquivoRodape);
+                $pdfFinal->setSourceFile($tempDanfe);
                 $tplDanfe = $pdfFinal->importPage(1);
                 $sizeDanfe = $pdfFinal->getTemplateSize($tplDanfe);
 
@@ -157,6 +182,11 @@ class EtiquetaShopeeProcessor
                 $pdfFinal->useTemplate($tplDanfe, $xDanfe, $yDanfe, $scaledWD, $scaledHD);
 
                 $pdfFinal->Rotate(0);
+
+                // Remove arquivo temporário do DANFE
+                if (file_exists($tempDanfe)) {
+                    unlink($tempDanfe);
+                }
             }
 
             // Remove arquivo temporário
@@ -166,6 +196,10 @@ class EtiquetaShopeeProcessor
         }
 
         // Salva PDF final
+        if (empty($outputFile)) {
+            $outputFile = __DIR__ . '/file.pdf';
+        }
         $pdfFinal->Output($outputFile, 'F');
+        return $outputFile;
     }
 }
