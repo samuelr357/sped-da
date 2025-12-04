@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__ . '/../../vendor/autoload.php';
+namespace NFePHP\DA\Shopee;
 
 use NFePHP\DA\NFe\DanfeEtiqueta;
 use setasign\Fpdi\Fpdi;
