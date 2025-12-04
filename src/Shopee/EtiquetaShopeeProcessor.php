@@ -75,7 +75,7 @@ class EtiquetaShopeeProcessor
      * @param array $files
      * @param string $outputFile
      */
-    public function renderMultiple(array $files, string $outputFile = '')
+    public function renderMultiple(array $files)
     {
         $pdfFinal = new PDF_Rotate();
 
@@ -150,13 +150,10 @@ class EtiquetaShopeeProcessor
                 $pdfDanfe = new DanfeEtiqueta($danfesArray[$danfeIndex]);
                 $pdfContent = $pdfDanfe->render();
 
-                $tempDanfe = $this->tempDir . '/temp_danfe_' . uniqid() . '.pdf';
-                file_put_contents($tempDanfe, $pdfContent);
-
                 $pdfFinal->setSourceFile($tempCut);
                 $tplEtiquetaFinal = $pdfFinal->importPage($page);
 
-                $pdfFinal->setSourceFile($tempDanfe);
+                $pdfFinal->setSourceFile(StreamReader::createByString($pdfContent));
                 $tplDanfe = $pdfFinal->importPage(1);
                 $sizeDanfe = $pdfFinal->getTemplateSize($tplDanfe);
 
@@ -183,10 +180,6 @@ class EtiquetaShopeeProcessor
 
                 $pdfFinal->Rotate(0);
 
-                // Remove arquivo temporário do DANFE
-                if (file_exists($tempDanfe)) {
-                    unlink($tempDanfe);
-                }
             }
 
             // Remove arquivo temporário
@@ -195,11 +188,6 @@ class EtiquetaShopeeProcessor
             }
         }
 
-        // Salva PDF final
-        if (empty($outputFile)) {
-            $outputFile = __DIR__ . '/file.pdf';
-        }
-        $pdfFinal->Output($outputFile, 'F');
-        return $outputFile;
+        return $pdfFinal->Output('S');
     }
 }
