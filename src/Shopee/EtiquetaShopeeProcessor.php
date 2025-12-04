@@ -1,6 +1,6 @@
 <?php
 
-namespace NFePHP\DA\Shopee;
+require __DIR__ . '/../../vendor/autoload.php';
 
 use NFePHP\DA\NFe\DanfeEtiqueta;
 use setasign\Fpdi\Fpdi;
@@ -18,6 +18,42 @@ class EtiquetaShopeeProcessor
         $this->tempDir = sys_get_temp_dir();
     }
 
+    protected function decodeAndUncompressPdf(string $base64): string
+    {
+        $rawPdf = base64_decode($base64);
+
+        $tempIn = $this->tempDir . '/sho_temp_in_' . uniqid() . '.pdf';
+        $tempOut = $this->tempDir . '/sho_temp_out_' . uniqid() . '.pdf';
+
+        file_put_contents($tempIn, $rawPdf);
+
+        // Rodar Ghostscript removendo compressão
+        $gs = stripos(PHP_OS, 'WIN') === 0
+            ? '"gswin64c.exe"'
+            : 'gs';
+
+        $cmd = sprintf(
+            '%s -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/prepress -dCompressPages=false -dCompressFonts=false -dEncodeColorImages=false -dEncodeGrayImages=false -dEncodeMonoImages=false -sOutputFile="%s" "%s"',
+            $gs,
+            $tempOut,
+            $tempIn
+        );
+
+        exec($cmd, $output, $return);
+
+        if ($return !== 0 || !file_exists($tempOut)) {
+            throw new \Exception("Ghostscript falhou ao descomprimir o PDF.");
+        }
+
+        $uncompressed = file_get_contents($tempOut);
+
+        unlink($tempIn);
+        unlink($tempOut);
+
+        return $uncompressed;
+    }
+
+
     /**
      * Processa múltiplos arquivos e gera um PDF final único
      *
@@ -33,7 +69,7 @@ class EtiquetaShopeeProcessor
             $danfesData = $item['danfes'];
 
             if (preg_match('/^[A-Za-z0-9+\/=]+$/', $arquivoEtiquetas) === 1) {
-                $pdfEtiquetaString = base64_decode($arquivoEtiquetas);
+                $pdfEtiquetaString = $this->decodeAndUncompressPdf($arquivoEtiquetas);
             } else {
                 throw new \Exception("Etiqueta enviada não é base64 válido.");
             }
@@ -110,7 +146,7 @@ class EtiquetaShopeeProcessor
                 $pdfFinal->Rotate(270, $w / 2, $h / 2);
 
                 // Etiqueta
-                $scaleEtiqueta = 0.71;
+                $scaleEtiqueta = 0.72;
                 $scaledWE = $w * $scaleEtiqueta;
                 $scaledHE = $h * $scaleEtiqueta;
                 $xEtiqueta = -20;
@@ -137,7 +173,10 @@ class EtiquetaShopeeProcessor
             }
         }
 
-        return $pdfFinal->Output('S');
+        $pdfBinary = $pdfFinal->Output('S');
+
+        return base64_encode($pdfBinary);
+
     }
 }
 
