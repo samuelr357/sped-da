@@ -175,7 +175,7 @@ class EtiquetaShopeeProcessor
 
         $pdfBinary = $pdfFinal->Output('S');
 
-        return base64_encode($pdfBinary);
+        return $pdfBinary;
 
     }
 }
