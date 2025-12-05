@@ -443,7 +443,7 @@ class DanfeEtiquetaProdutos extends DaCommon
 
                 $texto = $this->getTagValue($prod, "xProd");
                 $aFont = ['font' => $this->fontePadrao, 'size' => 8, 'style' => 'I'];
-                $this->pdf->textBox($this->margem + 1, $y + 4, $this->wPrint, 6, $texto, $aFont, 'T', 'L', false, '', false);
+                $this->pdf->textBox($this->margem + 1, $y + 4, $this->wPrint - 20, 6, $texto, $aFont, 'T', 'L', false, '', false);
                 
                 $texto = $this->getTagValue($prod, "qCom");
                 $aFont = ['font' => $this->fontePadrao, 'size' => 8, 'style' => ''];
