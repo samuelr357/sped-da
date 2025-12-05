@@ -320,9 +320,9 @@ class DanfeEtiqueta extends DaCommon
         $aFont = ['font' => $this->fontePadrao, 'size' => 10, 'style' => 'B'];
         $this->pdf->textBox($x + 5, $y+ $bH +  2, $this->wPrint - 2, 7, $texto, $aFont, 'T', 'L', 0, '');
         $y += $bH + 3;
-        if (empty($this->infProt)) {
-            throw new \Exception('Apenas NFe autorizadas podem ser impressas em formato de etiqueta');
-        }
+        // if (empty($this->infProt)) {
+        //     throw new \Exception('Apenas NFe autorizadas podem ser impressas em formato de etiqueta');
+        // }
         if ($this->canceled) {
             throw new \Exception('Esta NFe está cancelada, e apenas NFe autorizadas podem ser '
                 .'impressas em formato de etiqueta');
