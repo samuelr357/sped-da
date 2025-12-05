@@ -3,6 +3,7 @@
 namespace NFePHP\DA\Shopee;
 
 use NFePHP\DA\NFe\DanfeEtiqueta;
+use NFePHP\DA\NFe\DanfeEtiquetaProdutos;
 use setasign\Fpdi\Fpdi;
 use setasign\Fpdi\PdfParser\StreamReader;
 
@@ -137,7 +138,7 @@ class EtiquetaShopeeProcessor
                 $w = $sizeEtiqueta['width'];
                 $h = $sizeEtiqueta['height'];
 
-                $pdfDanfe = new DanfeEtiqueta($danfesArray[$danfeIndex]);
+                $pdfDanfe = new DanfeEtiquetaProdutos($danfesArray[$danfeIndex]);
                 $pdfContent = $pdfDanfe->render();
 
                 $pdfFinal->setSourceFile(StreamReader::createByString($tempCut));
@@ -176,7 +177,6 @@ class EtiquetaShopeeProcessor
         $pdfBinary = $pdfFinal->Output('S');
 
         return $pdfBinary;
-
     }
 }
 

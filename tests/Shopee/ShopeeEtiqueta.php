@@ -16,6 +16,8 @@ try {
     $processor = new EtiquetaShopeeProcessor();
     $pdf = $processor->renderMultiple($files);
 
+    $pdf->Output(__DIR__ . "/saida_final.pdf", "F");
+
     echo ">>> PDF final gerado com sucesso!\n";
 } catch (\Exception $e) {
     die("ERRO: " . $e->getMessage() . "\n");
