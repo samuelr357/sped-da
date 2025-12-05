@@ -15,7 +15,11 @@ class EtiquetaShopeeProcessor
 
     public function __construct()
     {
-        $this->tempDir = sys_get_temp_dir();
+        $this->tempDir = __DIR__ . '/temp';
+
+        if (!is_dir($this->tempDir)) {
+            mkdir($this->tempDir, 0777, true);
+        }
     }
 
     protected function decodeAndUncompressPdf(string $base64): string
@@ -80,9 +84,9 @@ class EtiquetaShopeeProcessor
             // ============================
             // 1ª ETAPA: Cortar A4 → A6
             // ============================
-            $tempCut = $this->tempDir . '\temp_cut_' . uniqid() . '.pdf';
             $pdfCut = new Fpdi();
-            $pageCount = $pdfCut->setSourceFile(StreamReader::createByString($pdfEtiquetaString));
+            $reader = StreamReader::createByString($pdfEtiquetaString);
+            $pageCount = $pdfCut->setSourceFile($reader);
 
             for ($page = 1; $page <= $pageCount; $page++) {
                 $tpl = $pdfCut->importPage($page);
@@ -110,12 +114,13 @@ class EtiquetaShopeeProcessor
                 $pdfCut->useTemplate($tpl, -$halfWidth, -$halfHeight, $fullWidth, $fullHeight);
             }
 
-            $pdfCut->Output($tempCut, 'F');
+            $tempCut = $pdfCut->Output('S');
 
             // ============================
             // 2ª ETAPA: Etiqueta + DANFE na mesma página
             // ============================
-            $pageCount2 = (new Fpdi())->setSourceFile($tempCut);
+            $readerCut = StreamReader::createByString($tempCut);
+            $pageCount2 = (new Fpdi())->setSourceFile($readerCut);
 
             for ($page = 1; $page <= $pageCount2; $page++) {
                 // Obtém o DANFE XML para esta página
@@ -125,7 +130,7 @@ class EtiquetaShopeeProcessor
                 }
 
                 $pdfCutTemp = new Fpdi();
-                $pdfCutTemp->setSourceFile($tempCut);
+                $pdfCutTemp->setSourceFile(StreamReader::createByString($tempCut));
                 $tplEtiqueta = $pdfCutTemp->importPage($page);
                 $sizeEtiqueta = $pdfCutTemp->getTemplateSize($tplEtiqueta);
 
@@ -135,7 +140,7 @@ class EtiquetaShopeeProcessor
                 $pdfDanfe = new DanfeEtiqueta($danfesArray[$danfeIndex]);
                 $pdfContent = $pdfDanfe->render();
 
-                $pdfFinal->setSourceFile($tempCut);
+                $pdfFinal->setSourceFile(StreamReader::createByString($tempCut));
                 $tplEtiquetaFinal = $pdfFinal->importPage($page);
 
                 $pdfFinal->setSourceFile(StreamReader::createByString($pdfContent));
@@ -165,11 +170,6 @@ class EtiquetaShopeeProcessor
 
                 $pdfFinal->Rotate(0);
 
-            }
-
-            // Remove arquivo temporário
-            if (file_exists($tempCut)) {
-                unlink($tempCut);
             }
         }
 
