@@ -15,7 +15,7 @@ class EtiquetaShopeeProcessor
 
     public function __construct()
     {
-        $this->tempDir = __DIR__ . '/temp';
+        $this->tempDir = storage_path('app/sped-temp');
 
         if (!is_dir($this->tempDir)) {
             mkdir($this->tempDir, 0777, true);
