@@ -432,22 +432,26 @@ class DanfeEtiquetaProdutos extends DaCommon
     protected function bloco6($y)
     {
         $i = 0;
+        $texto = 'Produtos:';
+        $aFont = ['font' => $this->fontePadrao, 'size' => 8, 'style' => 'I'];
+        $this->pdf->textBox($this->margem, $y, $this->wPrint, 7, $texto, $aFont, 'T', 'L', 0, '');
+
+        $y2 = 0;
         if ($this->det) {
             while ($i < $this->det->length) {
                 $prod = $this->det->item($i);
 
-                $texto = 'Produtos:';
-                $aFont = ['font' => $this->fontePadrao, 'size' => 8, 'style' => 'I'];
-                $this->pdf->textBox($this->margem, $y, $this->wPrint, 7, $texto, $aFont, 'T', 'L', 0, '');
-
+                if ($i != 0) {
+                    $y2 += 3.2;
+                }
 
                 $texto = $this->getTagValue($prod, "xProd");
-                $aFont = ['font' => $this->fontePadrao, 'size' => 8, 'style' => 'I'];
-                $this->pdf->textBox($this->margem + 1, $y + 4, $this->wPrint - 20, 6, $texto, $aFont, 'T', 'L', false, '', false);
+                $aFont = ['font' => $this->fontePadrao, 'size' => 9, 'style' => 'I'];
+                $this->pdf->textBox($this->margem + 1, $y + 4 + $y2, $this->wPrint - 20, 6, $texto, $aFont, 'T', 'L', false, '', false);
                 
                 $texto = $this->getTagValue($prod, "qCom");
-                $aFont = ['font' => $this->fontePadrao, 'size' => 8, 'style' => ''];
-                $this->pdf->textBox($this->margem - 2, $y + 4, $this->wPrint, 7, $texto, $aFont, 'T', 'R', 0, '');
+                $aFont = ['font' => $this->fontePadrao, 'size' => 9, 'style' => ''];
+                $this->pdf->textBox($this->margem - 2, $y + 4 + $y2, $this->wPrint, 7, $texto, $aFont, 'T', 'R', 0, '');
 
                 $i++;
             }
