@@ -442,18 +442,28 @@ class DanfeEtiquetaProdutos extends DaCommon
                 $prod = $this->det->item($i);
 
                 if ($i != 0) {
-                    $y2 += 3.2;
+                    $y2 += 4.2;
+                    $this->pdf->line($this->margem + 2, $y + 4 + $y2, $this->wPrint + $this->margem - 2, $y + 4 + $y2);
                 }
 
-                $texto = $this->getTagValue($prod, "xProd");
+                $nome = $this->getTagValue($prod, "xProd");
+
+                $texto = $nome;
                 $aFont = ['font' => $this->fontePadrao, 'size' => 9, 'style' => 'I'];
                 $this->pdf->textBox($this->margem + 1, $y + 4 + $y2, $this->wPrint - 20, 6, $texto, $aFont, 'T', 'L', false, '', false);
-                
+
                 $texto = $this->getTagValue($prod, "qCom");
                 $aFont = ['font' => $this->fontePadrao, 'size' => 9, 'style' => ''];
                 $this->pdf->textBox($this->margem - 2, $y + 4 + $y2, $this->wPrint, 7, $texto, $aFont, 'T', 'R', 0, '');
 
                 $i++;
+
+                $tamanho = strlen($nome) / 37;
+                var_dump($tamanho);
+                if ($tamanho > 1) {
+                    $inteiro = floor($tamanho);
+                    $y2 += $inteiro == 1 ? 3.2 : $inteiro * 3.2;
+                }
             }
         }
     }
