@@ -38,7 +38,7 @@ class EtiquetaShopeeProcessor
             : 'gs';
 
         $cmd = sprintf(
-            '%s -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/prepress -dCompressPages=false -dCompressFonts=false -dEncodeColorImages=false -dEncodeGrayImages=false -dEncodeMonoImages=false -sOutputFile="%s" "%s"',
+            '%s -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/screen -sOutputFile="%s" "%s"',
             $gs,
             $tempOut,
             $tempIn
