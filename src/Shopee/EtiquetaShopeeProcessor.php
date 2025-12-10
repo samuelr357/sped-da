@@ -1,7 +1,7 @@
 <?php
 
-//namespace NFePHP\DA\Shopee;
-require __DIR__ . '/../../vendor/autoload.php';
+namespace NFePHP\DA\Shopee;
+//require __DIR__ . '/../../vendor/autoload.php';
 
 use NFePHP\DA\NFe\DanfeEtiqueta;
 use NFePHP\DA\NFe\DanfeEtiquetaProdutos;
@@ -178,8 +178,8 @@ class EtiquetaShopeeProcessor
 
         $pdfBinary = $pdfFinal->Output('S');
 
-        // return $pdfBinary;
-        return $pdfFinal;
+        return $pdfBinary;
+        //return $pdfFinal;
     }
 }
 
