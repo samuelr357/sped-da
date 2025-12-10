@@ -1,6 +1,7 @@
 <?php
 
-namespace NFePHP\DA\Shopee;
+//namespace NFePHP\DA\Shopee;
+require __DIR__ . '/../../vendor/autoload.php';
 
 use NFePHP\DA\NFe\DanfeEtiqueta;
 use NFePHP\DA\NFe\DanfeEtiquetaProdutos;
@@ -16,11 +17,12 @@ class EtiquetaShopeeProcessor
 
     public function __construct()
     {
-        $this->tempDir = storage_path('app/sped-temp');
+        // $this->tempDir = storage_path('app/sped-temp');
 
-        if (!is_dir($this->tempDir)) {
-            mkdir($this->tempDir, 0777, true);
-        }
+        // if (!is_dir($this->tempDir)) {
+        //     mkdir($this->tempDir, 0777, true);
+        // }
+        $this->tempDir = __DIR__;
     }
 
     protected function decodeAndUncompressPdf(string $base64): string
@@ -152,7 +154,7 @@ class EtiquetaShopeeProcessor
                 $pdfFinal->Rotate(270, $w / 2, $h / 2);
 
                 // Etiqueta
-                $scaleEtiqueta = 0.72;
+                $scaleEtiqueta = 0.71;
                 $scaledWE = $w * $scaleEtiqueta;
                 $scaledHE = $h * $scaleEtiqueta;
                 $xEtiqueta = -20;
@@ -176,7 +178,8 @@ class EtiquetaShopeeProcessor
 
         $pdfBinary = $pdfFinal->Output('S');
 
-        return $pdfBinary;
+        // return $pdfBinary;
+        return $pdfFinal;
     }
 }
 
