@@ -17,12 +17,12 @@ class EtiquetaShopeeProcessor
 
     public function __construct()
     {
-        // $this->tempDir = storage_path('app/sped-temp');
+        $this->tempDir = storage_path('app/sped-temp');
 
-        // if (!is_dir($this->tempDir)) {
-        //     mkdir($this->tempDir, 0777, true);
-        // }
-        $this->tempDir = __DIR__;
+        if (!is_dir($this->tempDir)) {
+            mkdir($this->tempDir, 0777, true);
+        }
+        //$this->tempDir = __DIR__;
     }
 
     protected function decodeAndUncompressPdf(string $base64): string
